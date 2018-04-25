@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimaryLight"
+    tools:context="com.android.gowtham.popularmovies.MainDiscoveryActivity">
+
+
+    <GridView
+        android:id="@+id/lvTitlesHolder"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:numColumns="2"></GridView>
+
+    <TextView
+        android:id="@+id/tv_no_internet_message_holder"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="@string/unable_to_fetch_data"
+        android:visibility="gone"
+        android:textSize="22sp"
+        android:gravity="center_vertical|center_horizontal"
+        android:textColor="@android:color/white"
+        />
+
+</FrameLayout>
