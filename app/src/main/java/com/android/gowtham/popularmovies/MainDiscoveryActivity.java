@@ -2,6 +2,7 @@ package com.android.gowtham.popularmovies;
 
 import android.content.Intent;
 import android.content.Loader;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -47,6 +48,11 @@ public class MainDiscoveryActivity extends AppCompatActivity implements View.OnC
         HttpAsyncTaskLoader httpAsyncTaskLoader = new HttpAsyncTaskLoader(this);
         httpAsyncTaskLoader.registerListener(ID, new MovieDownloadListener());
         httpAsyncTaskLoader.forceLoad();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
     }
 
     @Override
