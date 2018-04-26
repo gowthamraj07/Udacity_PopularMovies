@@ -11,7 +11,7 @@
         android:id="@+id/lvTitlesHolder"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:numColumns="2"></GridView>
+        android:numColumns="2"/>
 
     <TextView
         android:id="@+id/tv_no_internet_message_holder"

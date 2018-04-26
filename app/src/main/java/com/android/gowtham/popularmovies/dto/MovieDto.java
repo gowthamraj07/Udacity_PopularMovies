@@ -8,15 +8,13 @@ public class MovieDto implements Serializable{
     private final String overview;
     private final String voteAverage;
     private final String releaseDate;
-    private int id;
 
-    public MovieDto(String title, String posterPath, String overview, String voteAverage, String releaseDate, int id) {
+    public MovieDto(String title, String posterPath, String overview, String voteAverage, String releaseDate) {
         this.title = title;
         this.posterPath = posterPath;
         this.overview = overview;
         this.voteAverage = voteAverage;
         this.releaseDate = releaseDate;
-        this.id = id;
     }
 
     public String getTitle() {
@@ -37,9 +35,5 @@ public class MovieDto implements Serializable{
 
     public String getReleaseDate() {
         return releaseDate;
-    }
-
-    public int getId() {
-        return id;
     }
 }

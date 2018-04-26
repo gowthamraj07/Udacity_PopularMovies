@@ -73,7 +73,6 @@ public class MoviesDBHelper extends SQLiteOpenHelper {
             return null;
         }
         cursor.moveToNext();
-        int _id = Integer.parseInt(cursor.getString(cursor.getColumnIndex(_ID)));
         String title = cursor.getString(cursor.getColumnIndex(TITLE));
         String rating = cursor.getString(cursor.getColumnIndex(RATING));
         String synopsis = cursor.getString(cursor.getColumnIndex(SYNOPSIS));
@@ -82,7 +81,7 @@ public class MoviesDBHelper extends SQLiteOpenHelper {
 
         cursor.close();
 
-        return new MovieDto(title, thumbnailUrl, synopsis, rating, releaseDate, _id);
+        return new MovieDto(title, thumbnailUrl, synopsis, rating, releaseDate);
     }
 
     private Cursor getMovies(String s) {
@@ -108,7 +107,7 @@ public class MoviesDBHelper extends SQLiteOpenHelper {
             PARAMS[2] = movie.getImageUrl();
             PARAMS[3] = movie.getSynopsis();
             PARAMS[4] = movie.getVote();
-            PARAMS[5] = movie.getReleseDate();
+            PARAMS[5] = movie.getReleaseDate();
 
             writableDatabase.execSQL(insert_query, PARAMS);
         }

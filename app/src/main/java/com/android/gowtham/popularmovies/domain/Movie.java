@@ -2,15 +2,13 @@ package com.android.gowtham.popularmovies.domain;
 
 import com.android.gowtham.popularmovies.dto.MovieDto;
 
-public class Movie {
-    private MovieDto dto;
+import java.io.Serializable;
+
+public class Movie implements Serializable{
+    private final MovieDto dto;
 
     public Movie(MovieDto dto) {
         this.dto = dto;
-    }
-
-    public String getId() {
-        return String.valueOf(dto.getId());
     }
 
     public String getTitle() {
@@ -29,7 +27,7 @@ public class Movie {
         return Float.valueOf(dto.getVoteAverage());
     }
 
-    public String getReleseDate() {
+    public String getReleaseDate() {
         return dto.getReleaseDate();
     }
 }

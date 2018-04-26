@@ -2,7 +2,6 @@ package com.android.gowtham.popularmovies;
 
 import android.content.Intent;
 import android.content.Loader;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -23,8 +22,8 @@ import java.util.List;
 
 public class MainDiscoveryActivity extends AppCompatActivity implements View.OnClickListener {
 
-    public static final int VERSION = 4;
-    public static final int ID = 1234;
+    private static final int VERSION = 4;
+    private static final int ID = 1234;
 
     private MoviesListAdapter adapter;
     private MoviesDBHelper dbHelper;
@@ -48,17 +47,6 @@ public class MainDiscoveryActivity extends AppCompatActivity implements View.OnC
         HttpAsyncTaskLoader httpAsyncTaskLoader = new HttpAsyncTaskLoader(this);
         httpAsyncTaskLoader.registerListener(ID, new MovieDownloadListener());
         httpAsyncTaskLoader.forceLoad();
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
     }
 
     @Override
@@ -89,12 +77,12 @@ public class MainDiscoveryActivity extends AppCompatActivity implements View.OnC
         }
         int id = Integer.parseInt((String) v.getTag());
         MovieDto movieDetails = dbHelper.getMovieDetails(id);
-        startDetailsActivity(movieDetails);
+        startDetailsActivity(new Movie(movieDetails));
     }
 
-    private void startDetailsActivity(MovieDto movieDetails) {
+    private void startDetailsActivity(Movie movieDetails) {
         Intent intent = new Intent(this, MovieDetailActivity.class);
-        intent.putExtra(MovieConstant.MOVIE_DTO, movieDetails);
+        intent.putExtra(MovieConstant.MOVIE_DOMAIN, movieDetails);
         startActivity(intent);
     }
 

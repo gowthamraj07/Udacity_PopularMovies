@@ -9,7 +9,7 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.android.gowtham.popularmovies.dto.MovieDto;
+import com.android.gowtham.popularmovies.domain.Movie;
 import com.android.gowtham.popularmovies.utils.MovieConstant;
 import com.squareup.picasso.Picasso;
 
@@ -27,12 +27,12 @@ public class MovieDetailActivity extends AppCompatActivity {
         ImageView ivThumbnail = findViewById(R.id.ivThumbnail);
 
         Intent intent = getIntent();
-        MovieDto dto = (MovieDto) intent.getSerializableExtra("MOVIE_DTO");
+        Movie dto = (Movie) intent.getSerializableExtra("MOVIE_DOMAIN");
         String title = dto.getTitle();
-        String rating = dto.getVoteAverage()+" / 10";
+        String rating = ""+dto.getVote()+" / 10";
         String releaseDate = dto.getReleaseDate();
-        String synopsis = dto.getOverview();
-        String thumbnailUrl = dto.getPosterPath();
+        String synopsis = dto.getSynopsis();
+        String thumbnailUrl = dto.getImageUrl();
 
         tvTitle.setText(title);
         tvRating.setText(rating);

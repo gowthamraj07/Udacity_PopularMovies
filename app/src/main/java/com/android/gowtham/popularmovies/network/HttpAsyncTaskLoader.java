@@ -33,7 +33,6 @@ public class HttpAsyncTaskLoader extends AsyncTaskLoader<List<MovieDto>> {
     private static final String OVERVIEW = "overview";
     private static final String VOTE_AVERAGE = "vote_average";
     private static final String RELEASE_DATE = "release_date";
-    private static final String ID = "id";
     private static final String HTTPS = "https";
     private static final String API_KEY = "api_key";
     private static final String SORT_BY = "sort_by";
@@ -92,11 +91,10 @@ public class HttpAsyncTaskLoader extends AsyncTaskLoader<List<MovieDto>> {
             String overview = jsonObject.getString(OVERVIEW);
             String voteAverage = jsonObject.getString(VOTE_AVERAGE);
             String releaseDate = jsonObject.getString(RELEASE_DATE);
-            int id = jsonObject.getInt(ID);
 
             Log.i(getClass().getName(), posterPath);
 
-            dtoList.add(new MovieDto(title, posterPath, overview, voteAverage, releaseDate, id));
+            dtoList.add(new MovieDto(title, posterPath, overview, voteAverage, releaseDate));
         }
 
         return dtoList;
