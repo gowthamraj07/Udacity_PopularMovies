@@ -2,6 +2,7 @@ package com.android.gowtham.popularmovies;
 
 import android.content.Intent;
 import android.content.Loader;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -25,7 +26,6 @@ public class MainDiscoveryActivity extends AppCompatActivity implements View.OnC
     private static final int VERSION = 4;
     private static final int ID = 1234;
 
-    private MoviesListAdapter adapter;
     private MoviesDBHelper dbHelper;
     private GridView movieThumbnails;
     private TextView tvUnableToFetchData;
@@ -44,9 +44,7 @@ public class MainDiscoveryActivity extends AppCompatActivity implements View.OnC
         movieThumbnails = findViewById(R.id.lvTitlesHolder);
         tvUnableToFetchData = findViewById(R.id.tv_no_internet_message_holder);
 
-        HttpAsyncTaskLoader httpAsyncTaskLoader = new HttpAsyncTaskLoader(this);
-        httpAsyncTaskLoader.registerListener(ID, new MovieDownloadListener());
-        httpAsyncTaskLoader.forceLoad();
+        sortByPopularity();
     }
 
     @Override
@@ -99,26 +97,25 @@ public class MainDiscoveryActivity extends AppCompatActivity implements View.OnC
                 movies.add(new Movie(dto));
             }
             dbHelper.addMovies(movies);
-            sortByPopularity();
+            loadMovieToGridView(dbHelper.getMovies());
         }
     }
 
     private void sortByRating() {
-        if(tvUnableToFetchData.getVisibility() == View.VISIBLE) {
-            return;
-        }
-        adapter = new MoviesListAdapter(this, dbHelper.getMoviesSortByRating(), this);
-        movieThumbnails.setAdapter(adapter);
-        movieThumbnails.invalidate();
+        HttpAsyncTaskLoader httpAsyncTaskLoader = new HttpAsyncTaskLoader(this, MovieConstant.SORT_BY_RATING);
+        httpAsyncTaskLoader.registerListener(ID, new MovieDownloadListener());
+        httpAsyncTaskLoader.forceLoad();
     }
 
     private void sortByPopularity() {
-        if(tvUnableToFetchData.getVisibility() == View.VISIBLE) {
-            return;
-        }
-        adapter = new MoviesListAdapter(this, dbHelper.getMoviesSortByPopularity(), this);
+        HttpAsyncTaskLoader httpAsyncTaskLoader = new HttpAsyncTaskLoader(this, MovieConstant.SORT_BY_POPULARITY);
+        httpAsyncTaskLoader.registerListener(ID, new MovieDownloadListener());
+        httpAsyncTaskLoader.forceLoad();
+    }
+
+    private void loadMovieToGridView(Cursor moviesSortByRating) {
+        MoviesListAdapter adapter = new MoviesListAdapter(this, moviesSortByRating, this);
         movieThumbnails.setAdapter(adapter);
         movieThumbnails.invalidate();
     }
-
 }

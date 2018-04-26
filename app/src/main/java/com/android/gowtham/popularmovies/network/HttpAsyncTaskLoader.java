@@ -24,7 +24,8 @@ import java.util.Scanner;
 public class HttpAsyncTaskLoader extends AsyncTaskLoader<List<MovieDto>> {
 
     private static final String BASE_PATH = "api.themoviedb.org/3";
-    private static final String DISCOVER_PATH = "/movie/popular";
+    private static final String SORY_BY_POPULARITY = "/movie/popular";
+    private static final String SORY_BY_HISHEST_RATE = "/movie/top_rated";
     private static final String STARTED_DOWNLOADING = "Started downloading";
     private static final String FINISHED_DOWNLOADING = "Finished downloading";
     private static final String RESULTS = "results";
@@ -37,9 +38,11 @@ public class HttpAsyncTaskLoader extends AsyncTaskLoader<List<MovieDto>> {
     private static final String API_KEY = "api_key";
     private static final String SORT_BY = "sort_by";
     private static final String POPULARITY_DESC = "popularity.desc";
+    private final String sortBy;
 
-    public HttpAsyncTaskLoader(Context context) {
+    public HttpAsyncTaskLoader(Context context, String sortBy) {
         super(context);
+        this.sortBy = sortBy;
     }
 
     @Override
@@ -101,8 +104,12 @@ public class HttpAsyncTaskLoader extends AsyncTaskLoader<List<MovieDto>> {
     }
 
     private Uri getUrlToDownload() {
-        return new Uri.Builder().scheme(HTTPS).path(BASE_PATH + DISCOVER_PATH)
+        return new Uri.Builder().scheme(HTTPS).path(BASE_PATH + getSortByUrl())
                 .appendQueryParameter(API_KEY, MovieConstant.API_KEY_VALUE)
                 .appendQueryParameter(SORT_BY, POPULARITY_DESC).build();
+    }
+
+    private String getSortByUrl() {
+        return sortBy.equals(MovieConstant.SORT_BY_POPULARITY)?SORY_BY_POPULARITY:SORY_BY_HISHEST_RATE;
     }
 }

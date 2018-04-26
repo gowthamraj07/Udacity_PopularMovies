@@ -55,14 +55,6 @@ public class MoviesDBHelper extends SQLiteOpenHelper {
         insertValues(writableDatabase, movies);
     }
 
-    public Cursor getMoviesSortByRating() {
-        return getMovies(RATING + " DESC");
-    }
-
-    public Cursor getMoviesSortByPopularity() {
-        return getMovies(_ID + " ASC");
-    }
-
     public MovieDto getMovieDetails(int id) {
         if (readableDatabase == null) {
             readableDatabase = getReadableDatabase();
@@ -82,6 +74,10 @@ public class MoviesDBHelper extends SQLiteOpenHelper {
         cursor.close();
 
         return new MovieDto(title, thumbnailUrl, synopsis, rating, releaseDate);
+    }
+
+    public Cursor getMovies() {
+        return getMovies(_ID + " ASC");
     }
 
     private Cursor getMovies(String s) {
@@ -112,4 +108,6 @@ public class MoviesDBHelper extends SQLiteOpenHelper {
             writableDatabase.execSQL(insert_query, PARAMS);
         }
     }
+
+
 }
