@@ -13,15 +13,6 @@ import java.util.List;
 public class MoviesDBHelper extends SQLiteOpenHelper {
 
 
-    static final String _ID = "_id";
-    static final String THUMBNAIL_URL = "thumbnail_url";
-
-    private static final String TABLE_NAME = "movies_table";
-    private static final String TITLE = "title";
-    private static final String SYNOPSIS = "synopsis";
-    private static final String RATING = "rating";
-    private static final String DOR = "release_date";
-
     private SQLiteDatabase readableDatabase;
 
     public MoviesDBHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
@@ -31,26 +22,27 @@ public class MoviesDBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String CREATE_MOVIES_TABLE = "CREATE TABLE " + TABLE_NAME + " ( "
-                + _ID + " INTEGER PRIMARY KEY, "
-                + TITLE + " TEXT, "
-                + THUMBNAIL_URL + " TEXT, "
-                + SYNOPSIS + " TEXT, "
-                + RATING + " INTEGER, "
-                + DOR + " TEXT"
+        String CREATE_MOVIES_TABLE = "CREATE TABLE " + MoviesDBContract.TABLE_NAME + " ( "
+                + MoviesDBContract._ID + " INTEGER PRIMARY KEY, "
+                + MoviesDBContract.TITLE_COLUMN + " TEXT, "
+                + MoviesDBContract.THUMBNAIL_URL_COLUMN + " TEXT, "
+                + MoviesDBContract.SYNOPSIS_COLUMN + " TEXT, "
+                + MoviesDBContract.RATING_COLUMN + " INTEGER, "
+                + MoviesDBContract.DOR_COLUMN + " TEXT, "
+                + MoviesDBContract.MOVIE_ID + " NUMBER"
                 + ")";
         db.execSQL(CREATE_MOVIES_TABLE);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + MoviesDBContract.TABLE_NAME);
         onCreate(db);
     }
 
     public void addMovies(List<Movie> movies) {
         SQLiteDatabase writableDatabase = getWritableDatabase();
-        writableDatabase.execSQL("DELETE FROM " + TABLE_NAME);
+        writableDatabase.execSQL("DELETE FROM " + MoviesDBContract.TABLE_NAME);
 
         insertValues(writableDatabase, movies);
     }
@@ -59,51 +51,54 @@ public class MoviesDBHelper extends SQLiteOpenHelper {
         if (readableDatabase == null) {
             readableDatabase = getReadableDatabase();
         }
-        Cursor cursor = readableDatabase.rawQuery("SELECT * FROM " + TABLE_NAME + " WHERE " + _ID + " = " + id, null);
+        Cursor cursor = readableDatabase.rawQuery("SELECT * FROM " + MoviesDBContract.TABLE_NAME + " WHERE " + MoviesDBContract._ID + " = " + id, null);
 
         if (cursor.getCount() < 1) {
             return null;
         }
         cursor.moveToNext();
-        String title = cursor.getString(cursor.getColumnIndex(TITLE));
-        String rating = cursor.getString(cursor.getColumnIndex(RATING));
-        String synopsis = cursor.getString(cursor.getColumnIndex(SYNOPSIS));
-        String releaseDate = cursor.getString(cursor.getColumnIndex(DOR));
-        String thumbnailUrl = cursor.getString(cursor.getColumnIndex(THUMBNAIL_URL));
+        long movieId = cursor.getLong(cursor.getColumnIndex(MoviesDBContract.MOVIE_ID));
+        String title = cursor.getString(cursor.getColumnIndex(MoviesDBContract.TITLE_COLUMN));
+        String rating = cursor.getString(cursor.getColumnIndex(MoviesDBContract.RATING_COLUMN));
+        String synopsis = cursor.getString(cursor.getColumnIndex(MoviesDBContract.SYNOPSIS_COLUMN));
+        String releaseDate = cursor.getString(cursor.getColumnIndex(MoviesDBContract.DOR_COLUMN));
+        String thumbnailUrl = cursor.getString(cursor.getColumnIndex(MoviesDBContract.THUMBNAIL_URL_COLUMN));
 
         cursor.close();
 
-        return new MovieDto(title, thumbnailUrl, synopsis, rating, releaseDate);
+        return new MovieDto(movieId, title, thumbnailUrl, synopsis, rating, releaseDate);
     }
 
     public Cursor getMovies() {
-        return getMovies(_ID + " ASC");
+        return getMovies(MoviesDBContract._ID + " ASC");
     }
 
     private Cursor getMovies(String s) {
         if (readableDatabase == null) {
             readableDatabase = getReadableDatabase();
         }
-        return readableDatabase.rawQuery("SELECT * FROM " + TABLE_NAME + " ORDER BY " + s, null);
+        return readableDatabase.rawQuery("SELECT * FROM " + MoviesDBContract.TABLE_NAME + " ORDER BY " + s, null);
     }
 
     private void insertValues(SQLiteDatabase writableDatabase, List<Movie> movies) {
-        Object[] PARAMS = new Object[6];
+        Object[] PARAMS = new Object[7];
         int index = 0;
-        String insert_query = "INSERT INTO " + TABLE_NAME + "(" + _ID + ","
-                + TITLE + ","
-                + THUMBNAIL_URL + ","
-                + SYNOPSIS + ","
-                + RATING + ","
-                + DOR + ") VALUES (?,?,?,?,?,?) ";
+        String insert_query = "INSERT INTO " + MoviesDBContract.TABLE_NAME + "(" + MoviesDBContract._ID + ","
+                + MoviesDBContract.MOVIE_ID + ","
+                + MoviesDBContract.TITLE_COLUMN + ","
+                + MoviesDBContract.THUMBNAIL_URL_COLUMN + ","
+                + MoviesDBContract.SYNOPSIS_COLUMN + ","
+                + MoviesDBContract.RATING_COLUMN + ","
+                + MoviesDBContract.DOR_COLUMN + ") VALUES (?,?,?,?,?,?,?) ";
 
         for (Movie movie : movies) {
             PARAMS[0] = index++;
-            PARAMS[1] = movie.getTitle();
-            PARAMS[2] = movie.getImageUrl();
-            PARAMS[3] = movie.getSynopsis();
-            PARAMS[4] = movie.getVote();
-            PARAMS[5] = movie.getReleaseDate();
+            PARAMS[1] = movie.getMovieId();
+            PARAMS[2] = movie.getTitle();
+            PARAMS[3] = movie.getImageUrl();
+            PARAMS[4] = movie.getSynopsis();
+            PARAMS[5] = movie.getVote();
+            PARAMS[6] = movie.getReleaseDate();
 
             writableDatabase.execSQL(insert_query, PARAMS);
         }

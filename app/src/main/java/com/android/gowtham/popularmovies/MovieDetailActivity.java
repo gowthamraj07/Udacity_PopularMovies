@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -13,7 +14,7 @@ import com.android.gowtham.popularmovies.domain.Movie;
 import com.android.gowtham.popularmovies.utils.MovieConstant;
 import com.squareup.picasso.Picasso;
 
-public class MovieDetailActivity extends AppCompatActivity {
+public class MovieDetailActivity extends AppCompatActivity implements View.OnClickListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,7 +28,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         ImageView ivThumbnail = findViewById(R.id.ivThumbnail);
 
         Intent intent = getIntent();
-        Movie dto = (Movie) intent.getSerializableExtra("MOVIE_DOMAIN");
+        Movie dto = (Movie) intent.getSerializableExtra(MovieConstant.MOVIE_DOMAIN);
         String title = dto.getTitle();
         String rating = ""+dto.getVote()+" / 10";
         String releaseDate = dto.getReleaseDate();
@@ -39,6 +40,8 @@ public class MovieDetailActivity extends AppCompatActivity {
         tvReleaseDate.setText(releaseDate);
         tvSynopsis.setText(synopsis);
         Picasso.with(this).load(getAbsolutePath(thumbnailUrl)).into(ivThumbnail);
+
+        ivThumbnail.setOnClickListener(this);
 
     }
 
@@ -62,5 +65,10 @@ public class MovieDetailActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onClick(View v) {
+
     }
 }

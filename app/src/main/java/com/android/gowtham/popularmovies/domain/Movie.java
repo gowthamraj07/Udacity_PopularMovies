@@ -11,6 +11,10 @@ public class Movie implements Serializable{
         this.dto = dto;
     }
 
+    public long getMovieId() {
+        return dto.getMovieId();
+    }
+
     public String getTitle() {
         return dto.getTitle();
     }

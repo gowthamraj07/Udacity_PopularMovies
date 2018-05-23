@@ -29,6 +29,7 @@ public class HttpAsyncTaskLoader extends AsyncTaskLoader<List<MovieDto>> {
     private static final String STARTED_DOWNLOADING = "Started downloading";
     private static final String FINISHED_DOWNLOADING = "Finished downloading";
     private static final String RESULTS = "results";
+    private static final String MOVIE_ID = "id";
     private static final String TITLE = "title";
     private static final String POSTER_PATH = "poster_path";
     private static final String OVERVIEW = "overview";
@@ -39,6 +40,7 @@ public class HttpAsyncTaskLoader extends AsyncTaskLoader<List<MovieDto>> {
     private static final String SORT_BY = "sort_by";
     private static final String POPULARITY_DESC = "popularity.desc";
     private final String sortBy;
+    private String TAG = HttpAsyncTaskLoader.class.getSimpleName();
 
     public HttpAsyncTaskLoader(Context context, String sortBy) {
         super(context);
@@ -57,6 +59,7 @@ public class HttpAsyncTaskLoader extends AsyncTaskLoader<List<MovieDto>> {
         try {
             String strUrl = urlToDownload.toString();
             URL url = new URL(strUrl);
+            Log.i(TAG, url.toString());
             String content = getContent(url);
             return getMovieDtoListFromString(content);
         } catch (MalformedURLException e) {
@@ -89,6 +92,7 @@ public class HttpAsyncTaskLoader extends AsyncTaskLoader<List<MovieDto>> {
 
         for(int index=0; index < results.length(); index++) {
             JSONObject jsonObject = results.getJSONObject(index);
+            long movieId = jsonObject.getLong(MOVIE_ID);
             String title = jsonObject.getString(TITLE);
             String posterPath = jsonObject.getString(POSTER_PATH);
             String overview = jsonObject.getString(OVERVIEW);
@@ -97,7 +101,7 @@ public class HttpAsyncTaskLoader extends AsyncTaskLoader<List<MovieDto>> {
 
             Log.i(getClass().getName(), posterPath);
 
-            dtoList.add(new MovieDto(title, posterPath, overview, voteAverage, releaseDate));
+            dtoList.add(new MovieDto(movieId, title, posterPath, overview, voteAverage, releaseDate));
         }
 
         return dtoList;

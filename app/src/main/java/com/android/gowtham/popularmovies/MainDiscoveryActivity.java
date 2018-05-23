@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.GridView;
 import android.widget.TextView;
 
+import com.android.gowtham.popularmovies.db.MoviesDBContract;
 import com.android.gowtham.popularmovies.db.MoviesDBHelper;
 import com.android.gowtham.popularmovies.db.MoviesListAdapter;
 import com.android.gowtham.popularmovies.domain.Movie;
@@ -23,7 +24,6 @@ import java.util.List;
 
 public class MainDiscoveryActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private static final int VERSION = 4;
     private static final int ID = 1234;
 
     private MoviesDBHelper dbHelper;
@@ -39,7 +39,7 @@ public class MainDiscoveryActivity extends AppCompatActivity implements View.OnC
             throw new RuntimeException("Please add TMDb Api key to the variable \"MovieConstant.API_KEY_VALUE\" and run the project again");
         }
 
-        dbHelper = new MoviesDBHelper(getApplicationContext(), MovieConstant.DB_NAME, null, VERSION);
+        dbHelper = new MoviesDBHelper(getApplicationContext(), MoviesDBContract.DB_NAME, null, MoviesDBContract.VERSION);
 
         movieThumbnails = findViewById(R.id.lvTitlesHolder);
         tvUnableToFetchData = findViewById(R.id.tv_no_internet_message_holder);

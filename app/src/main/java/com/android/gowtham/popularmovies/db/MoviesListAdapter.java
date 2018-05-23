@@ -43,8 +43,8 @@ public class MoviesListAdapter extends CursorAdapter {
         }
 
         ImageView ivThumbnails = (ImageView) view;
-        String id = cursor.getString(cursor.getColumnIndex(MoviesDBHelper._ID));
-        String thumbnailUrl = cursor.getString(cursor.getColumnIndex(MoviesDBHelper.THUMBNAIL_URL));
+        String id = cursor.getString(cursor.getColumnIndex(MoviesDBContract._ID));
+        String thumbnailUrl = cursor.getString(cursor.getColumnIndex(MoviesDBContract.THUMBNAIL_URL_COLUMN));
         ivThumbnails.setTag(id);
         Picasso.with(context).load(getAbsolutePath(thumbnailUrl)).into(ivThumbnails);
     }
