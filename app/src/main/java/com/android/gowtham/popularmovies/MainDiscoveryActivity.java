@@ -24,6 +24,7 @@ import java.util.List;
 public class MainDiscoveryActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final int ID = 1234;
+    public static final String ITEM_ID = "ITEM_ID";
     public static boolean sIsDataChanged = false;
 
     private MoviesDBHelper dbHelper;
@@ -45,7 +46,7 @@ public class MainDiscoveryActivity extends AppCompatActivity implements View.OnC
         movieThumbnails = findViewById(R.id.lvTitlesHolder);
         tvUnableToFetchData = findViewById(R.id.tv_no_internet_message_holder);
 
-        sortByPopularity();
+
     }
 
     @Override
@@ -53,6 +54,12 @@ public class MainDiscoveryActivity extends AppCompatActivity implements View.OnC
         super.onResume();
         if(sIsDataChanged) {
             showMoviesBasedOnSelection(itemId);
+        } else {
+            if(itemId == 0) {
+                sortByPopularity();
+            } else {
+                showMoviesBasedOnSelection(itemId);
+            }
         }
     }
 
@@ -67,6 +74,18 @@ public class MainDiscoveryActivity extends AppCompatActivity implements View.OnC
         int itemId = item.getItemId();
         if (showMoviesBasedOnSelection(itemId)) return true;
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putInt(ITEM_ID, itemId);
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        itemId = savedInstanceState.getInt(ITEM_ID);
     }
 
     private boolean showMoviesBasedOnSelection(int itemId) {
