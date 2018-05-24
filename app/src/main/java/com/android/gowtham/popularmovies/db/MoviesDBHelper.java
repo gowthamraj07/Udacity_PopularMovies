@@ -179,4 +179,9 @@ public class MoviesDBHelper extends SQLiteOpenHelper {
 
         return cursor != null && !cursor.isClosed() && cursor.getCount() != 0;
     }
+
+    public Cursor getFavoriteMovie(String id) {
+        Cursor cursor = readableDatabase.rawQuery("SELECT * FROM " + MoviesDBContract.FAVORITE_TABLE_NAME + " WHERE \"" + MoviesDBContract.MOVIE_ID + "\" = " + id, null);
+        return cursor;
+    }
 }

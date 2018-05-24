@@ -18,6 +18,7 @@ import com.android.gowtham.popularmovies.db.MoviesListAdapter;
 import com.android.gowtham.popularmovies.domain.Movie;
 import com.android.gowtham.popularmovies.dto.MovieDto;
 import com.android.gowtham.popularmovies.network.HttpMoviesAsyncTaskLoader;
+import com.android.gowtham.popularmovies.providers.MovieProvider;
 import com.android.gowtham.popularmovies.utils.MovieConstant;
 
 import java.util.ArrayList;
@@ -159,7 +160,13 @@ public class MainDiscoveryActivity extends AppCompatActivity implements View.OnC
 
     private void showFavorites() {
         tvUnableToFetchData.setVisibility(View.GONE);
-        loadMovieToGridView(dbHelper.getFavoriteMovies());
+        loadFavoriteMovieToGridView();
+    }
+
+    private void loadFavoriteMovieToGridView() {
+
+        Cursor query = getContentResolver().query(MovieProvider.CONTENT_URI, null, null, null, null);
+        loadMovieToGridView(query);
     }
 
     private void loadMovieToGridView(Cursor cursor) {
@@ -171,6 +178,7 @@ public class MainDiscoveryActivity extends AppCompatActivity implements View.OnC
         }
 
         movieThumbnails.setLayoutManager(new GridLayoutManager(this, spanCount));
+
         MoviesListAdapter adapter = new MoviesListAdapter(this, cursor, this);
         movieThumbnails.setAdapter(adapter);
         movieThumbnails.invalidate();

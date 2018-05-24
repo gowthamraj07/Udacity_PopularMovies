@@ -28,6 +28,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MovieDetailActivity" />
         </activity>
+        <provider
+            android:authorities="com.android.gowtham.popularmovies"
+            android:name=".providers.MovieProvider"
+            android:exported="true"/>
     </application>
 
 </manifest>
