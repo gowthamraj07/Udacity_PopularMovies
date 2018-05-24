@@ -63,11 +63,13 @@ public class MoviesDBHelper extends SQLiteOpenHelper {
         if (readableDatabase == null) {
             readableDatabase = getReadableDatabase();
         }
+
         Cursor cursor = readableDatabase.rawQuery("SELECT * FROM " + MoviesDBContract.TABLE_NAME + " WHERE " + MoviesDBContract.MOVIE_ID + " = " + id, null);
 
         if (cursor.getCount() < 1) {
             return null;
         }
+
         cursor.moveToNext();
         long movieId = cursor.getLong(cursor.getColumnIndex(MoviesDBContract.MOVIE_ID));
         String title = cursor.getString(cursor.getColumnIndex(MoviesDBContract.TITLE_COLUMN));
@@ -118,6 +120,10 @@ public class MoviesDBHelper extends SQLiteOpenHelper {
 
 
     public void addFavoriteMovie(Movie movie) {
+
+        if(isFavorite(movie)) {
+            return;
+        }
 
         SQLiteDatabase writableDatabase = getWritableDatabase();
 
