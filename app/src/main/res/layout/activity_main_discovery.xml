@@ -20,7 +20,7 @@
         android:layout_height="match_parent"
         android:text="@string/unable_to_fetch_data"
         android:visibility="gone"
-        android:textSize="22sp"
+        android:textSize="@dimen/error_text_size"
         android:gravity="center_vertical|center_horizontal"
         android:textColor="@android:color/white"
         />

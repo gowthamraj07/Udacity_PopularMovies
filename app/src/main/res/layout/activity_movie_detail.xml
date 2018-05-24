@@ -19,7 +19,7 @@
             android:gravity="center_vertical"
             android:padding="16dp"
             android:textColor="@android:color/background_light"
-            android:textSize="30sp"
+            android:textSize="@dimen/header1_text_size"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -43,7 +43,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginLeft="16dp"
             android:layout_marginTop="16dp"
-            android:textSize="18sp"
+            android:textSize="@dimen/header3_text_size"
             app:layout_constraintStart_toEndOf="@+id/guideline"
             app:layout_constraintTop_toBottomOf="@+id/tvTitle" />
 
@@ -116,7 +116,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="16dp"
             android:text="@string/trailers"
-            android:textSize="18sp"
+            android:textSize="@dimen/header3_text_size"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tvBorder" />
 
