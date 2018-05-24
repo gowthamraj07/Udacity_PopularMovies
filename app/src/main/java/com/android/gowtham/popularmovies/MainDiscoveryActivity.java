@@ -2,13 +2,15 @@ package com.android.gowtham.popularmovies;
 
 import android.content.Intent;
 import android.content.Loader;
+import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.GridView;
 import android.widget.TextView;
 
 import com.android.gowtham.popularmovies.db.MoviesDBHelper;
@@ -26,11 +28,11 @@ public class MainDiscoveryActivity extends AppCompatActivity implements View.OnC
     private static final int ID = 1234;
     public static final String ITEM_ID = "ITEM_ID";
     public static boolean sIsDataChanged = false;
+    private static int itemId;
 
     private MoviesDBHelper dbHelper;
-    private GridView movieThumbnails;
+    private RecyclerView movieThumbnails;
     private TextView tvUnableToFetchData;
-    private int itemId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -160,8 +162,16 @@ public class MainDiscoveryActivity extends AppCompatActivity implements View.OnC
         loadMovieToGridView(dbHelper.getFavoriteMovies());
     }
 
-    private void loadMovieToGridView(Cursor moviesSortByRating) {
-        MoviesListAdapter adapter = new MoviesListAdapter(this, moviesSortByRating, this);
+    private void loadMovieToGridView(Cursor cursor) {
+        movieThumbnails.setHasFixedSize(true);
+        int spanCount = 3;
+
+        if(getResources().getConfiguration().orientation == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT) {
+            spanCount = 2;
+        }
+
+        movieThumbnails.setLayoutManager(new GridLayoutManager(this, spanCount));
+        MoviesListAdapter adapter = new MoviesListAdapter(this, cursor, this);
         movieThumbnails.setAdapter(adapter);
         movieThumbnails.invalidate();
     }
