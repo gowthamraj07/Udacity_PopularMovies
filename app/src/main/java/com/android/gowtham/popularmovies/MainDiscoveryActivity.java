@@ -41,7 +41,7 @@ public class MainDiscoveryActivity extends AppCompatActivity implements View.OnC
         setContentView(R.layout.activity_main_discovery);
 
         if(MovieConstant.API_KEY_VALUE.length() == 0) {
-            throw new RuntimeException("Please add TMDb Api key to the variable \"MovieConstant.API_KEY_VALUE\" and run the project again");
+            throw new RuntimeException(getString(R.string.TMDb_api_missing_message));
         }
 
         dbHelper = new MoviesDBHelper(getApplicationContext());
