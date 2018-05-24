@@ -64,10 +64,14 @@ public class MoviesDBHelper extends SQLiteOpenHelper {
             readableDatabase = getReadableDatabase();
         }
 
-        Cursor cursor = readableDatabase.rawQuery("SELECT * FROM " + MoviesDBContract.TABLE_NAME + " WHERE " + MoviesDBContract.MOVIE_ID + " = " + id, null);
+        Cursor cursor = getCursorForMovie(id, MoviesDBContract.TABLE_NAME);
 
         if (cursor.getCount() < 1) {
-            return null;
+            cursor = getCursorForMovie(id, MoviesDBContract.FAVORITE_TABLE_NAME);
+
+            if(cursor.getCount() < 1) {
+                return null;
+            }
         }
 
         cursor.moveToNext();
@@ -81,6 +85,10 @@ public class MoviesDBHelper extends SQLiteOpenHelper {
         cursor.close();
 
         return new MovieDto(movieId, title, thumbnailUrl, synopsis, rating, releaseDate);
+    }
+
+    private Cursor getCursorForMovie(int id, String tableName) {
+        return readableDatabase.rawQuery("SELECT * FROM " + tableName + " WHERE " + MoviesDBContract.MOVIE_ID + " = " + id, null);
     }
 
     public Cursor getMovies() {

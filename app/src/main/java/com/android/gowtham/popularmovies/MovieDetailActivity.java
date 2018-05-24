@@ -142,6 +142,9 @@ public class MovieDetailActivity extends AppCompatActivity {
     private class FavoriteStateChangeListener implements CompoundButton.OnCheckedChangeListener {
         @Override
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+            MainDiscoveryActivity.sIsDataChanged = true;
+
             if(isChecked) {
                 moviesDBHelper.addFavoriteMovie(dto);
             } else {
