@@ -1,5 +1,6 @@
 package com.android.gowtham.popularmovies;
 
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.Loader;
 import android.net.Uri;
@@ -16,10 +17,12 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import com.android.gowtham.popularmovies.adapter.TrailerAdapter;
+import com.android.gowtham.popularmovies.db.MoviesDBContract;
 import com.android.gowtham.popularmovies.db.MoviesDBHelper;
 import com.android.gowtham.popularmovies.domain.Movie;
 import com.android.gowtham.popularmovies.dto.TrailerDto;
 import com.android.gowtham.popularmovies.network.HttpTrailersAsyncTaskLoader;
+import com.android.gowtham.popularmovies.providers.MovieProvider;
 import com.android.gowtham.popularmovies.utils.MovieConstant;
 import com.squareup.picasso.Picasso;
 
@@ -49,7 +52,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         dto = (Movie) intent.getSerializableExtra(MovieConstant.MOVIE_DOMAIN);
         movieId = dto.getMovieId();
         String title = dto.getTitle();
-        String rating = ""+ dto.getVote()+" / 10";
+        String rating = "" + dto.getVote() + " / 10";
         String releaseDate = dto.getReleaseDate();
         String synopsis = dto.getSynopsis();
         String thumbnailUrl = dto.getImageUrl();
@@ -71,7 +74,7 @@ public class MovieDetailActivity extends AppCompatActivity {
 
         Picasso.with(this).load(getAbsolutePath(thumbnailUrl)).into(ivThumbnail);
 
-        Log.i(MovieDetailActivity.class.getSimpleName(), dto.getTitle()+":"+dto.getMovieId());
+        Log.i(MovieDetailActivity.class.getSimpleName(), dto.getTitle() + ":" + dto.getMovieId());
 
     }
 
@@ -93,14 +96,14 @@ public class MovieDetailActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
 
-        if(itemId == R.id.action_show_review) {
+        if (itemId == R.id.action_show_review) {
             Intent intent = new Intent(this, MovieReviewActivity.class);
             intent.putExtra(MovieConstant.MOVIE_DOMAIN, getIntent().getSerializableExtra(MovieConstant.MOVIE_DOMAIN));
             startActivity(intent);
             return true;
         }
 
-        if(itemId == android.R.id.home) {
+        if (itemId == android.R.id.home) {
             onBackPressed();
             return true;
         }
@@ -129,7 +132,7 @@ public class MovieDetailActivity extends AppCompatActivity {
 
         @Override
         public void onLoadComplete(Loader<List<TrailerDto>> loader, List<TrailerDto> data) {
-            if(data == null) {
+            if (data == null) {
                 return;
             }
 
@@ -145,10 +148,18 @@ public class MovieDetailActivity extends AppCompatActivity {
 
             MainDiscoveryActivity.sIsDataChanged = true;
 
-            if(isChecked) {
-                moviesDBHelper.addFavoriteMovie(dto);
+            if (isChecked) {
+                ContentValues contentValue = new ContentValues();
+                contentValue.put(MoviesDBContract.MOVIE_ID, dto.getMovieId());
+                contentValue.put(MoviesDBContract.TITLE_COLUMN, dto.getTitle());
+                contentValue.put(MoviesDBContract.THUMBNAIL_URL_COLUMN, dto.getImageUrl());
+                contentValue.put(MoviesDBContract.SYNOPSIS_COLUMN, dto.getSynopsis());
+                contentValue.put(MoviesDBContract.RATING_COLUMN, dto.getVote());
+                contentValue.put(MoviesDBContract.DOR_COLUMN, dto.getReleaseDate());
+
+                getContentResolver().insert(MovieProvider.CONTENT_URI, contentValue);
             } else {
-                moviesDBHelper.removeFavoriteMovie(dto);
+                getContentResolver().delete(MovieProvider.CONTENT_URI.buildUpon().appendPath(""+dto.getMovieId()).build(), null, null);
             }
         }
     }
