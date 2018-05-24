@@ -11,12 +11,11 @@ import android.view.View;
 import android.widget.GridView;
 import android.widget.TextView;
 
-import com.android.gowtham.popularmovies.db.MoviesDBContract;
 import com.android.gowtham.popularmovies.db.MoviesDBHelper;
 import com.android.gowtham.popularmovies.db.MoviesListAdapter;
 import com.android.gowtham.popularmovies.domain.Movie;
 import com.android.gowtham.popularmovies.dto.MovieDto;
-import com.android.gowtham.popularmovies.network.HttpAsyncTaskLoader;
+import com.android.gowtham.popularmovies.network.HttpMoviesAsyncTaskLoader;
 import com.android.gowtham.popularmovies.utils.MovieConstant;
 
 import java.util.ArrayList;
@@ -39,7 +38,7 @@ public class MainDiscoveryActivity extends AppCompatActivity implements View.OnC
             throw new RuntimeException("Please add TMDb Api key to the variable \"MovieConstant.API_KEY_VALUE\" and run the project again");
         }
 
-        dbHelper = new MoviesDBHelper(getApplicationContext(), MoviesDBContract.DB_NAME, null, MoviesDBContract.VERSION);
+        dbHelper = new MoviesDBHelper(getApplicationContext());
 
         movieThumbnails = findViewById(R.id.lvTitlesHolder);
         tvUnableToFetchData = findViewById(R.id.tv_no_internet_message_holder);
@@ -62,6 +61,9 @@ public class MainDiscoveryActivity extends AppCompatActivity implements View.OnC
                 return true;
             case R.id.action_sort_by_rating:
                 sortByRating();
+                return true;
+            case R.id.action_show_favorites:
+                showFavorites();
                 return true;
 
         }
@@ -102,15 +104,20 @@ public class MainDiscoveryActivity extends AppCompatActivity implements View.OnC
     }
 
     private void sortByRating() {
-        HttpAsyncTaskLoader httpAsyncTaskLoader = new HttpAsyncTaskLoader(this, MovieConstant.SORT_BY_RATING);
-        httpAsyncTaskLoader.registerListener(ID, new MovieDownloadListener());
-        httpAsyncTaskLoader.forceLoad();
+        HttpMoviesAsyncTaskLoader httpMoviesAsyncTaskLoader = new HttpMoviesAsyncTaskLoader(this, MovieConstant.SORT_BY_RATING);
+        httpMoviesAsyncTaskLoader.registerListener(ID, new MovieDownloadListener());
+        httpMoviesAsyncTaskLoader.forceLoad();
     }
 
     private void sortByPopularity() {
-        HttpAsyncTaskLoader httpAsyncTaskLoader = new HttpAsyncTaskLoader(this, MovieConstant.SORT_BY_POPULARITY);
-        httpAsyncTaskLoader.registerListener(ID, new MovieDownloadListener());
-        httpAsyncTaskLoader.forceLoad();
+        HttpMoviesAsyncTaskLoader httpMoviesAsyncTaskLoader = new HttpMoviesAsyncTaskLoader(this, MovieConstant.SORT_BY_POPULARITY);
+        httpMoviesAsyncTaskLoader.registerListener(ID, new MovieDownloadListener());
+        httpMoviesAsyncTaskLoader.forceLoad();
+    }
+
+    private void showFavorites() {
+        tvUnableToFetchData.setVisibility(View.GONE);
+        loadMovieToGridView(dbHelper.getFavoriteMovies());
     }
 
     private void loadMovieToGridView(Cursor moviesSortByRating) {

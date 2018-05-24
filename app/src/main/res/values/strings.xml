@@ -4,4 +4,7 @@
     <string name="sort_by_rating">Sort By Rating</string>
     <string name="unable_to_fetch_data">Unable to fetch movies, Please check the internet connection and start the application again</string>
     <string name="thumbnail_image_of_movie">Thumbnail image of movie</string>
+    <string name="trailers">Trailers :</string>
+    <string name="show_reviews">Show reviews</string>
+    <string name="show_favorites">Show Favorites</string>
 </resources>

@@ -15,8 +15,8 @@ public class MoviesDBHelper extends SQLiteOpenHelper {
 
     private SQLiteDatabase readableDatabase;
 
-    public MoviesDBHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
-        super(context, name, factory, version);
+    public MoviesDBHelper(Context context) {
+        super(context, MoviesDBContract.DB_NAME, null, MoviesDBContract.VERSION);
         readableDatabase = getReadableDatabase();
     }
 
@@ -31,7 +31,19 @@ public class MoviesDBHelper extends SQLiteOpenHelper {
                 + MoviesDBContract.DOR_COLUMN + " TEXT, "
                 + MoviesDBContract.MOVIE_ID + " NUMBER"
                 + ")";
+
+        String CREATE_FAVORITE_MOVIES_TABLE = "CREATE TABLE " + MoviesDBContract.FAVORITE_TABLE_NAME + " ( "
+                + MoviesDBContract._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + MoviesDBContract.TITLE_COLUMN + " TEXT, "
+                + MoviesDBContract.THUMBNAIL_URL_COLUMN + " TEXT, "
+                + MoviesDBContract.SYNOPSIS_COLUMN + " TEXT, "
+                + MoviesDBContract.RATING_COLUMN + " INTEGER, "
+                + MoviesDBContract.DOR_COLUMN + " TEXT, "
+                + MoviesDBContract.MOVIE_ID + " NUMBER"
+                + ")";
+
         db.execSQL(CREATE_MOVIES_TABLE);
+        db.execSQL(CREATE_FAVORITE_MOVIES_TABLE);
     }
 
     @Override
@@ -105,4 +117,52 @@ public class MoviesDBHelper extends SQLiteOpenHelper {
     }
 
 
+    public void addFavoriteMovie(Movie movie) {
+
+        SQLiteDatabase writableDatabase = getWritableDatabase();
+
+        Object[] PARAMS = new Object[6];
+
+        String insert_query = "INSERT INTO " + MoviesDBContract.FAVORITE_TABLE_NAME + "("
+                + MoviesDBContract.MOVIE_ID + ","
+                + MoviesDBContract.TITLE_COLUMN + ","
+                + MoviesDBContract.THUMBNAIL_URL_COLUMN + ","
+                + MoviesDBContract.SYNOPSIS_COLUMN + ","
+                + MoviesDBContract.RATING_COLUMN + ","
+                + MoviesDBContract.DOR_COLUMN + ") VALUES (?,?,?,?,?,?) ";
+
+        PARAMS[0] = movie.getMovieId();
+        PARAMS[1] = movie.getTitle();
+        PARAMS[2] = movie.getImageUrl();
+        PARAMS[3] = movie.getSynopsis();
+        PARAMS[4] = movie.getVote();
+        PARAMS[5] = movie.getReleaseDate();
+
+        writableDatabase.execSQL(insert_query, PARAMS);
+
+    }
+
+    public void removeFavoriteMovie(Movie dto) {
+        SQLiteDatabase writableDatabase = getWritableDatabase();
+
+        String delete_query = "DELETE FROM "+ MoviesDBContract.FAVORITE_TABLE_NAME + " WHERE \""+MoviesDBContract.MOVIE_ID+"\" = "+dto.getMovieId();
+
+        writableDatabase.execSQL(delete_query);
+    }
+
+    public Cursor getFavoriteMovies() {
+        if (readableDatabase == null) {
+            readableDatabase = getReadableDatabase();
+        }
+        return readableDatabase.rawQuery("SELECT * FROM " + MoviesDBContract.FAVORITE_TABLE_NAME + " ORDER BY " + MoviesDBContract._ID, null);
+    }
+
+    public boolean isFavorite(Movie dto) {
+        if (readableDatabase == null) {
+            readableDatabase = getReadableDatabase();
+        }
+        Cursor cursor = readableDatabase.rawQuery("SELECT * FROM " + MoviesDBContract.FAVORITE_TABLE_NAME + " WHERE \"" + MoviesDBContract.MOVIE_ID + "\" = " + dto.getMovieId(), null);
+
+        return cursor != null && !cursor.isClosed() && cursor.getCount() != 0;
+    }
 }

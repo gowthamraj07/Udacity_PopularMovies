@@ -21,28 +21,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class HttpAsyncTaskLoader extends AsyncTaskLoader<List<MovieDto>> {
+public class HttpMoviesAsyncTaskLoader extends AsyncTaskLoader<List<MovieDto>> {
 
-    private static final String BASE_PATH = "api.themoviedb.org/3";
-    private static final String SORY_BY_POPULARITY = "/movie/popular";
-    private static final String SORY_BY_HISHEST_RATE = "/movie/top_rated";
-    private static final String STARTED_DOWNLOADING = "Started downloading";
-    private static final String FINISHED_DOWNLOADING = "Finished downloading";
-    private static final String RESULTS = "results";
-    private static final String MOVIE_ID = "id";
-    private static final String TITLE = "title";
-    private static final String POSTER_PATH = "poster_path";
-    private static final String OVERVIEW = "overview";
-    private static final String VOTE_AVERAGE = "vote_average";
-    private static final String RELEASE_DATE = "release_date";
-    private static final String HTTPS = "https";
-    private static final String API_KEY = "api_key";
-    private static final String SORT_BY = "sort_by";
-    private static final String POPULARITY_DESC = "popularity.desc";
     private final String sortBy;
-    private String TAG = HttpAsyncTaskLoader.class.getSimpleName();
+    private String TAG = HttpMoviesAsyncTaskLoader.class.getSimpleName();
 
-    public HttpAsyncTaskLoader(Context context, String sortBy) {
+    public HttpMoviesAsyncTaskLoader(Context context, String sortBy) {
         super(context);
         this.sortBy = sortBy;
     }
@@ -50,7 +34,7 @@ public class HttpAsyncTaskLoader extends AsyncTaskLoader<List<MovieDto>> {
     @Override
     protected void onStartLoading() {
         super.onStartLoading();
-        Log.i(getClass().getName(), STARTED_DOWNLOADING);
+        Log.i(getClass().getName(), MovieConstant.STARTED_DOWNLOADING);
     }
 
     @Override
@@ -82,22 +66,22 @@ public class HttpAsyncTaskLoader extends AsyncTaskLoader<List<MovieDto>> {
     @Override
     protected void onStopLoading() {
         super.onStopLoading();
-        Log.i(getClass().getName(), FINISHED_DOWNLOADING);
+        Log.i(getClass().getName(), MovieConstant.FINISHED_DOWNLOADING);
     }
 
     private List<MovieDto> getMovieDtoListFromString(String content) throws JSONException {
         JSONObject obj = new JSONObject(content);
-        JSONArray results = obj.getJSONArray(RESULTS);
+        JSONArray results = obj.getJSONArray(MovieConstant.RESULTS);
         List<MovieDto> dtoList = new ArrayList<>();
 
         for(int index=0; index < results.length(); index++) {
             JSONObject jsonObject = results.getJSONObject(index);
-            long movieId = jsonObject.getLong(MOVIE_ID);
-            String title = jsonObject.getString(TITLE);
-            String posterPath = jsonObject.getString(POSTER_PATH);
-            String overview = jsonObject.getString(OVERVIEW);
-            String voteAverage = jsonObject.getString(VOTE_AVERAGE);
-            String releaseDate = jsonObject.getString(RELEASE_DATE);
+            long movieId = jsonObject.getLong(MovieConstant.MOVIE_ID);
+            String title = jsonObject.getString(MovieConstant.TITLE);
+            String posterPath = jsonObject.getString(MovieConstant.POSTER_PATH);
+            String overview = jsonObject.getString(MovieConstant.OVERVIEW);
+            String voteAverage = jsonObject.getString(MovieConstant.VOTE_AVERAGE);
+            String releaseDate = jsonObject.getString(MovieConstant.RELEASE_DATE);
 
             Log.i(getClass().getName(), posterPath);
 
@@ -108,12 +92,12 @@ public class HttpAsyncTaskLoader extends AsyncTaskLoader<List<MovieDto>> {
     }
 
     private Uri getUrlToDownload() {
-        return new Uri.Builder().scheme(HTTPS).path(BASE_PATH + getSortByUrl())
-                .appendQueryParameter(API_KEY, MovieConstant.API_KEY_VALUE)
-                .appendQueryParameter(SORT_BY, POPULARITY_DESC).build();
+        return new Uri.Builder().scheme(MovieConstant.HTTPS).path(MovieConstant.BASE_PATH + getSortByUrl())
+                .appendQueryParameter(MovieConstant.API_KEY, MovieConstant.API_KEY_VALUE)
+                .appendQueryParameter(MovieConstant.SORT_BY, MovieConstant.POPULARITY_DESC).build();
     }
 
     private String getSortByUrl() {
-        return sortBy.equals(MovieConstant.SORT_BY_POPULARITY)?SORY_BY_POPULARITY:SORY_BY_HISHEST_RATE;
+        return sortBy.equals(MovieConstant.SORT_BY_POPULARITY)? MovieConstant.SORY_BY_POPULARITY: MovieConstant.SORY_BY_HISHEST_RATE;
     }
 }

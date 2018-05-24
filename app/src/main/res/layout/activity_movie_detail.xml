@@ -66,6 +66,19 @@
             app:layout_constraintStart_toEndOf="@+id/guideline"
             app:layout_constraintTop_toBottomOf="@+id/tvReleaseDate" />
 
+        <ToggleButton
+            android:id="@+id/tBtnFavorite"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:background="@android:drawable/btn_star"
+            android:textOff=""
+            android:textOn=""
+            app:layout_constraintLeft_toRightOf="@+id/guideline"
+            app:layout_constraintTop_toBottomOf="@+id/tvRating"
+            android:layout_marginStart="8dp" />
+
         <TextView
             android:id="@+id/tvSynopsis"
             android:layout_width="0dp"
@@ -80,6 +93,47 @@
             app:layout_constraintTop_toBottomOf="@+id/ivThumbnail">
 
         </TextView>
+
+        <TextView
+            android:id="@+id/tvBorder"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_margin="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginStart="8dp"
+            android:background="@android:color/darker_gray"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvSynopsis" />
+
+        <TextView
+            android:id="@+id/tvTrailer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/trailers"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvBorder" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rvTrailers"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginLeft="24dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvTrailer" />
     </android.support.constraint.ConstraintLayout>
 
 </ScrollView>

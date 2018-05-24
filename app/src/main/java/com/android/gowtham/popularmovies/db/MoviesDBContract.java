@@ -9,9 +9,10 @@ public final class MoviesDBContract implements BaseColumns{
     }
 
     public static final String DB_NAME = "movies_db";
-    public static final int VERSION = 5;
+    public static final int VERSION = 6;
 
     static final String TABLE_NAME = "movies_table";
+    static final String FAVORITE_TABLE_NAME = "favorite_movies_table";
 
     static final String THUMBNAIL_URL_COLUMN = "thumbnail_url";
     static final String TITLE_COLUMN = "title";
