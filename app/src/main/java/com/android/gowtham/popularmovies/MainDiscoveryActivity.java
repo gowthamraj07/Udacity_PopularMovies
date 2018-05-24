@@ -24,10 +24,12 @@ import java.util.List;
 public class MainDiscoveryActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final int ID = 1234;
+    public static boolean sIsDataChanged = false;
 
     private MoviesDBHelper dbHelper;
     private GridView movieThumbnails;
     private TextView tvUnableToFetchData;
+    private int itemId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +49,14 @@ public class MainDiscoveryActivity extends AppCompatActivity implements View.OnC
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        if(sIsDataChanged) {
+            showMoviesBasedOnSelection(itemId);
+        }
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.settings, menu);
         return true;
@@ -55,7 +65,13 @@ public class MainDiscoveryActivity extends AppCompatActivity implements View.OnC
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
-        switch (itemId) {
+        if (showMoviesBasedOnSelection(itemId)) return true;
+        return super.onOptionsItemSelected(item);
+    }
+
+    private boolean showMoviesBasedOnSelection(int itemId) {
+        this.itemId = itemId;
+        switch (this.itemId) {
             case R.id.action_sort_by_popularity:
                 sortByPopularity();
                 return true;
@@ -67,7 +83,7 @@ public class MainDiscoveryActivity extends AppCompatActivity implements View.OnC
                 return true;
 
         }
-        return super.onOptionsItemSelected(item);
+        return false;
     }
 
     @Override
@@ -77,6 +93,11 @@ public class MainDiscoveryActivity extends AppCompatActivity implements View.OnC
         }
         int id = Integer.parseInt((String) v.getTag());
         MovieDto movieDetails = dbHelper.getMovieDetails(id);
+
+        if(movieDetails == null) {
+            return;
+        }
+
         startDetailsActivity(new Movie(movieDetails));
     }
 

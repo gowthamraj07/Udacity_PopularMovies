@@ -63,7 +63,7 @@ public class MoviesDBHelper extends SQLiteOpenHelper {
         if (readableDatabase == null) {
             readableDatabase = getReadableDatabase();
         }
-        Cursor cursor = readableDatabase.rawQuery("SELECT * FROM " + MoviesDBContract.TABLE_NAME + " WHERE " + MoviesDBContract._ID + " = " + id, null);
+        Cursor cursor = readableDatabase.rawQuery("SELECT * FROM " + MoviesDBContract.TABLE_NAME + " WHERE " + MoviesDBContract.MOVIE_ID + " = " + id, null);
 
         if (cursor.getCount() < 1) {
             return null;
