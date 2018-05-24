@@ -26,4 +26,10 @@ public class MovieConstant {
     public static final String API_KEY = "api_key";
     public static final String SORT_BY = "sort_by";
     public static final String POPULARITY_DESC = "popularity.desc";
+
+    public static final String KEY = "key";
+    public static final String TYPE = "type";
+
+    public static final String AUTHOR = "author";
+    public static final String CONTENT = "content";
 }
