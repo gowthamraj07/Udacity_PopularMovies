@@ -78,8 +78,8 @@ public class HttpTrailersAsyncTaskLoader extends AsyncTaskLoader<List<TrailerDto
         for(int index=0; index < results.length(); index++) {
             JSONObject jsonObject = results.getJSONObject(index);
             String trailerId = jsonObject.getString("id");
-            String key = jsonObject.getString("key");
-            String type = jsonObject.getString("type");
+            String key = jsonObject.getString(MovieConstant.KEY);
+            String type = jsonObject.getString(MovieConstant.TYPE);
             if("Trailer".equalsIgnoreCase(type)) {
                 dtoList.add(new TrailerDto(trailerId, key));
             }

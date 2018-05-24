@@ -48,8 +48,6 @@ public class MainDiscoveryActivity extends AppCompatActivity implements View.OnC
 
         movieThumbnails = findViewById(R.id.lvTitlesHolder);
         tvUnableToFetchData = findViewById(R.id.tv_no_internet_message_holder);
-
-
     }
 
     @Override
@@ -75,8 +73,7 @@ public class MainDiscoveryActivity extends AppCompatActivity implements View.OnC
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
-        if (showMoviesBasedOnSelection(itemId)) return true;
-        return super.onOptionsItemSelected(item);
+        return showMoviesBasedOnSelection(itemId) || super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -92,8 +89,8 @@ public class MainDiscoveryActivity extends AppCompatActivity implements View.OnC
     }
 
     private boolean showMoviesBasedOnSelection(int itemId) {
-        this.itemId = itemId;
-        switch (this.itemId) {
+        MainDiscoveryActivity.itemId = itemId;
+        switch (MainDiscoveryActivity.itemId) {
             case R.id.action_sort_by_popularity:
                 sortByPopularity();
                 return true;

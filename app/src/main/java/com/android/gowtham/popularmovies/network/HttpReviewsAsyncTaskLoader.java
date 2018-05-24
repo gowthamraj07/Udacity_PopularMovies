@@ -78,8 +78,8 @@ public class HttpReviewsAsyncTaskLoader extends AsyncTaskLoader<List<ReviewDto>>
         for(int index=0; index < results.length(); index++) {
             JSONObject jsonObject = results.getJSONObject(index);
 
-            String author = jsonObject.getString("author");
-            String reviewContent = jsonObject.getString("content");
+            String author = jsonObject.getString(MovieConstant.AUTHOR);
+            String reviewContent = jsonObject.getString(MovieConstant.CONTENT);
 
             dtoList.add(new ReviewDto(author, reviewContent));
 

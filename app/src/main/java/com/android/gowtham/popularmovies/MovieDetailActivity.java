@@ -32,7 +32,6 @@ public class MovieDetailActivity extends AppCompatActivity {
 
     private long movieId;
     private RecyclerView rvTrailer;
-    private MoviesDBHelper moviesDBHelper;
     private Movie dto;
 
     @Override
@@ -67,7 +66,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         rvTrailer.setLayoutManager(layoutManager);
 
-        moviesDBHelper = new MoviesDBHelper(getApplicationContext());
+        MoviesDBHelper moviesDBHelper = new MoviesDBHelper(getApplicationContext());
         boolean favorite = moviesDBHelper.isFavorite(dto);
 
         tbtnFavorite.setChecked(favorite);

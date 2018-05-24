@@ -18,6 +18,9 @@ import static android.net.Uri.parse;
 
 public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.ViewHolder> {
 
+    private static final String VND_YOUTUBE = "vnd.youtube:";
+    private static final String HTTP_WWW_YOUTUBE_COM_WATCH_V = "http://www.youtube.com/watch?v=";
+
     private Context applicationContext;
     private List<TrailerDto> trailerList;
     private View.OnClickListener mOnClickListener = new TrailerClickListener();
@@ -71,9 +74,9 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.ViewHold
             }
 
             String key = ((TrailerDto) tag).getKey();
-            Intent appIntent = new Intent(Intent.ACTION_VIEW, parse("vnd.youtube:" + key));
+            Intent appIntent = new Intent(Intent.ACTION_VIEW, parse(VND_YOUTUBE + key));
             Intent webIntent = new Intent(Intent.ACTION_VIEW,
-                    parse("http://www.youtube.com/watch?v=" + key));
+                    parse(HTTP_WWW_YOUTUBE_COM_WATCH_V + key));
             try {
                 applicationContext.startActivity(appIntent);
             } catch (ActivityNotFoundException ex) {
