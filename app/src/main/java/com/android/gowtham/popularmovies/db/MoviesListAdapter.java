@@ -64,15 +64,15 @@ public class MoviesListAdapter extends RecyclerView.Adapter<MoviesListAdapter.Vi
         return cursor.getCount();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder {
         private View itemView;
 
-        public ViewHolder(View itemView) {
+        ViewHolder(View itemView) {
             super(itemView);
             this.itemView = itemView;
         }
 
-        public void bindData(Cursor cursor) {
+        void bindData(Cursor cursor) {
             if(! (itemView instanceof ImageView)) {
                 return;
             }
@@ -81,7 +81,7 @@ public class MoviesListAdapter extends RecyclerView.Adapter<MoviesListAdapter.Vi
             String id = cursor.getString(cursor.getColumnIndex(MoviesDBContract.MOVIE_ID));
             String thumbnailUrl = cursor.getString(cursor.getColumnIndex(MoviesDBContract.THUMBNAIL_URL_COLUMN));
             ivThumbnails.setTag(id);
-            Picasso.with(context).load(getAbsolutePath(thumbnailUrl)).into(ivThumbnails);
+            Picasso.with(context).load(getAbsolutePath(thumbnailUrl)).placeholder(android.R.drawable.ic_menu_gallery).error(android.R.drawable.ic_menu_report_image).into(ivThumbnails);
         }
     }
 }

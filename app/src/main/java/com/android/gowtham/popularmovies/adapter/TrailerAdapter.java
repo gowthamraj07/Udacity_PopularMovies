@@ -47,21 +47,22 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.ViewHold
         return trailerList.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder {
 
         private final TextView tvTrailer;
         private View itemView;
 
-        public ViewHolder(View itemView) {
+        ViewHolder(View itemView) {
             super(itemView);
 
             this.itemView = itemView;
             tvTrailer = itemView.findViewById(R.id.tvTrailer);
         }
 
-        public void bindTrailer(TrailerDto trailerDto, int position) {
+        void bindTrailer(TrailerDto trailerDto, int position) {
             itemView.setTag(trailerDto);
-            tvTrailer.setText("Trailer "+ (position+1));
+            String text = applicationContext.getString(R.string.trailer_string) + (position + 1);
+            tvTrailer.setText(text);
         }
     }
 

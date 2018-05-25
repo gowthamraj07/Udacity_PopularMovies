@@ -17,7 +17,6 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import com.android.gowtham.popularmovies.adapter.TrailerAdapter;
-import com.android.gowtham.popularmovies.db.MoviesDBContract;
 import com.android.gowtham.popularmovies.db.MoviesDBHelper;
 import com.android.gowtham.popularmovies.domain.Movie;
 import com.android.gowtham.popularmovies.dto.TrailerDto;
@@ -32,7 +31,7 @@ public class MovieDetailActivity extends AppCompatActivity {
 
     private long movieId;
     private RecyclerView rvTrailer;
-    private Movie dto;
+    private Movie domain;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,13 +47,13 @@ public class MovieDetailActivity extends AppCompatActivity {
         rvTrailer = findViewById(R.id.rvTrailers);
 
         Intent intent = getIntent();
-        dto = (Movie) intent.getSerializableExtra(MovieConstant.MOVIE_DOMAIN);
-        movieId = dto.getMovieId();
-        String title = dto.getTitle();
-        String rating = "" + dto.getVote() + " / 10";
-        String releaseDate = dto.getReleaseDate();
-        String synopsis = dto.getSynopsis();
-        String thumbnailUrl = dto.getImageUrl();
+        domain = (Movie) intent.getParcelableExtra(MovieConstant.MOVIE_DOMAIN);
+        movieId = domain.getMovieId();
+        String title = domain.getTitle();
+        String rating = "" + domain.getVote() + " / 10";
+        String releaseDate = domain.getReleaseDate();
+        String synopsis = domain.getSynopsis();
+        String thumbnailUrl = domain.getImageUrl();
 
         tvTitle.setText(title);
         tvRating.setText(rating);
@@ -67,13 +66,14 @@ public class MovieDetailActivity extends AppCompatActivity {
         rvTrailer.setLayoutManager(layoutManager);
 
         MoviesDBHelper moviesDBHelper = new MoviesDBHelper(getApplicationContext());
-        boolean favorite = moviesDBHelper.isFavorite(dto);
+        boolean favorite = moviesDBHelper.isFavorite(domain);
 
         tbtnFavorite.setChecked(favorite);
+        MainDiscoveryActivity.sIsDataChanged = false;
 
         Picasso.with(this).load(getAbsolutePath(thumbnailUrl)).into(ivThumbnail);
 
-        Log.i(MovieDetailActivity.class.getSimpleName(), dto.getTitle() + ":" + dto.getMovieId());
+        Log.i(MovieDetailActivity.class.getSimpleName(), domain.getTitle() + ":" + domain.getMovieId());
 
     }
 
@@ -148,17 +148,10 @@ public class MovieDetailActivity extends AppCompatActivity {
             MainDiscoveryActivity.sIsDataChanged = true;
 
             if (isChecked) {
-                ContentValues contentValue = new ContentValues();
-                contentValue.put(MoviesDBContract.MOVIE_ID, dto.getMovieId());
-                contentValue.put(MoviesDBContract.TITLE_COLUMN, dto.getTitle());
-                contentValue.put(MoviesDBContract.THUMBNAIL_URL_COLUMN, dto.getImageUrl());
-                contentValue.put(MoviesDBContract.SYNOPSIS_COLUMN, dto.getSynopsis());
-                contentValue.put(MoviesDBContract.RATING_COLUMN, dto.getVote());
-                contentValue.put(MoviesDBContract.DOR_COLUMN, dto.getReleaseDate());
-
-                getContentResolver().insert(MovieProvider.CONTENT_URI, contentValue);
+                ContentValues contentValue = domain.getContentValue();
+                getContentResolver().insert(MovieProvider.FAVORITE_CONTENT_URI, contentValue);
             } else {
-                getContentResolver().delete(MovieProvider.CONTENT_URI.buildUpon().appendPath(""+dto.getMovieId()).build(), null, null);
+                getContentResolver().delete(MovieProvider.FAVORITE_CONTENT_URI.buildUpon().appendPath(""+ domain.getMovieId()).build(), null, null);
             }
         }
     }

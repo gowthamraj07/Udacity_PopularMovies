@@ -1,16 +1,10 @@
 package com.android.gowtham.popularmovies.dto;
 
 public class TrailerDto {
-    private final String trailerId;
     private final String key;
 
-    public TrailerDto(String trailerId, String key) {
-        this.trailerId = trailerId;
+    public TrailerDto(String key) {
         this.key = key;
-    }
-
-    public String getTrailerId() {
-        return trailerId;
     }
 
     public String getKey() {

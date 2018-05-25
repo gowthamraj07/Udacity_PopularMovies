@@ -81,7 +81,7 @@ public class HttpTrailersAsyncTaskLoader extends AsyncTaskLoader<List<TrailerDto
             String key = jsonObject.getString(MovieConstant.KEY);
             String type = jsonObject.getString(MovieConstant.TYPE);
             if("Trailer".equalsIgnoreCase(type)) {
-                dtoList.add(new TrailerDto(trailerId, key));
+                dtoList.add(new TrailerDto(key));
             }
         }
 

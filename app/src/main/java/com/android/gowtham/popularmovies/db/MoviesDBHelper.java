@@ -6,7 +6,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.android.gowtham.popularmovies.domain.Movie;
-import com.android.gowtham.popularmovies.dto.MovieDto;
 
 import java.util.List;
 
@@ -57,38 +56,6 @@ public class MoviesDBHelper extends SQLiteOpenHelper {
         writableDatabase.execSQL("DELETE FROM " + MoviesDBContract.TABLE_NAME);
 
         insertValues(writableDatabase, movies);
-    }
-
-    public MovieDto getMovieDetails(int id) {
-        if (readableDatabase == null) {
-            readableDatabase = getReadableDatabase();
-        }
-
-        Cursor cursor = getCursorForMovie(id, MoviesDBContract.TABLE_NAME);
-
-        if (cursor.getCount() < 1) {
-            cursor = getCursorForMovie(id, MoviesDBContract.FAVORITE_TABLE_NAME);
-
-            if(cursor.getCount() < 1) {
-                return null;
-            }
-        }
-
-        cursor.moveToNext();
-        long movieId = cursor.getLong(cursor.getColumnIndex(MoviesDBContract.MOVIE_ID));
-        String title = cursor.getString(cursor.getColumnIndex(MoviesDBContract.TITLE_COLUMN));
-        String rating = cursor.getString(cursor.getColumnIndex(MoviesDBContract.RATING_COLUMN));
-        String synopsis = cursor.getString(cursor.getColumnIndex(MoviesDBContract.SYNOPSIS_COLUMN));
-        String releaseDate = cursor.getString(cursor.getColumnIndex(MoviesDBContract.DOR_COLUMN));
-        String thumbnailUrl = cursor.getString(cursor.getColumnIndex(MoviesDBContract.THUMBNAIL_URL_COLUMN));
-
-        cursor.close();
-
-        return new MovieDto(movieId, title, thumbnailUrl, synopsis, rating, releaseDate);
-    }
-
-    private Cursor getCursorForMovie(int id, String tableName) {
-        return readableDatabase.rawQuery("SELECT * FROM " + tableName + " WHERE " + MoviesDBContract.MOVIE_ID + " = " + id, null);
     }
 
     public Cursor getMovies() {
@@ -156,10 +123,10 @@ public class MoviesDBHelper extends SQLiteOpenHelper {
 
     }
 
-    public void removeFavoriteMovie(Movie dto) {
+    public void removeFavoriteMovie(long movieId) {
         SQLiteDatabase writableDatabase = getWritableDatabase();
 
-        String delete_query = "DELETE FROM "+ MoviesDBContract.FAVORITE_TABLE_NAME + " WHERE \""+MoviesDBContract.MOVIE_ID+"\" = "+dto.getMovieId();
+        String delete_query = "DELETE FROM "+ MoviesDBContract.FAVORITE_TABLE_NAME + " WHERE \""+MoviesDBContract.MOVIE_ID+"\" = "+movieId;
 
         writableDatabase.execSQL(delete_query);
     }
@@ -176,12 +143,19 @@ public class MoviesDBHelper extends SQLiteOpenHelper {
             readableDatabase = getReadableDatabase();
         }
         Cursor cursor = readableDatabase.rawQuery("SELECT * FROM " + MoviesDBContract.FAVORITE_TABLE_NAME + " WHERE \"" + MoviesDBContract.MOVIE_ID + "\" = " + dto.getMovieId(), null);
+        boolean isFavorite = cursor != null && !cursor.isClosed() && cursor.getCount() != 0;
+        if (cursor != null) {
+            cursor.close();
+        }
 
-        return cursor != null && !cursor.isClosed() && cursor.getCount() != 0;
+        return isFavorite;
     }
 
     public Cursor getFavoriteMovie(String id) {
-        Cursor cursor = readableDatabase.rawQuery("SELECT * FROM " + MoviesDBContract.FAVORITE_TABLE_NAME + " WHERE \"" + MoviesDBContract.MOVIE_ID + "\" = " + id, null);
-        return cursor;
+        return readableDatabase.rawQuery("SELECT * FROM " + MoviesDBContract.FAVORITE_TABLE_NAME + " WHERE \"" + MoviesDBContract.MOVIE_ID + "\" = " + id, null);
+    }
+
+    public Cursor getMovie(String id) {
+        return readableDatabase.rawQuery("SELECT * FROM " + MoviesDBContract.TABLE_NAME + " WHERE \"" + MoviesDBContract.MOVIE_ID + "\" = " + id, null);
     }
 }

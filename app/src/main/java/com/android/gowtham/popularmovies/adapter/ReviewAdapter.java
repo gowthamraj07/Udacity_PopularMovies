@@ -38,13 +38,13 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder
         return reviewList.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder {
 
         private View itemView;
         private final TextView tvAuthor;
         private final TextView tvReviewComment;
 
-        public ViewHolder(View itemView) {
+        ViewHolder(View itemView) {
             super(itemView);
 
             this.itemView = itemView;
@@ -52,7 +52,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder
             tvReviewComment = itemView.findViewById(R.id.tvReviewComment);
         }
 
-        public void bindReview(ReviewDto reviewDto) {
+        void bindReview(ReviewDto reviewDto) {
             itemView.setTag(reviewDto);
             tvAuthor.setText(reviewDto.getAuthor());
             tvReviewComment.setText(reviewDto.getReviewContent());
