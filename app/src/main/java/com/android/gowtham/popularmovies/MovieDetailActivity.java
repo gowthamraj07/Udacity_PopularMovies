@@ -97,7 +97,7 @@ public class MovieDetailActivity extends AppCompatActivity {
 
         if (itemId == R.id.action_show_review) {
             Intent intent = new Intent(this, MovieReviewActivity.class);
-            intent.putExtra(MovieConstant.MOVIE_DOMAIN, getIntent().getSerializableExtra(MovieConstant.MOVIE_DOMAIN));
+            intent.putExtra(MovieConstant.MOVIE_DOMAIN, getIntent().getParcelableExtra(MovieConstant.MOVIE_DOMAIN));
             startActivity(intent);
             return true;
         }

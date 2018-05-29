@@ -26,7 +26,7 @@ public class MovieReviewActivity extends AppCompatActivity {
         setContentView(R.layout.activity_movie_review);
 
         Intent intent = getIntent();
-        Movie dto = (Movie) intent.getSerializableExtra(MovieConstant.MOVIE_DOMAIN);
+        Movie dto = (Movie) intent.getParcelableExtra(MovieConstant.MOVIE_DOMAIN);
         movieId = dto.getMovieId();
 
         rvReviewList = findViewById(R.id.rvReviewList);
